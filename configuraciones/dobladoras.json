@@ -1,0 +1,47 @@
+{
+    "andres" :{
+        "t_macho" : 10.7,
+        "t_hembra" : 13.4,
+        "t_ancha" : 16,
+        "perfil" : 16.6,
+        "_laterales" : 15.2,
+        "_nave_corredera" : 15.2,
+        "_inf_nave_macho" : 9,
+        "_inf_nave_hembra" : 7.1,
+        "riel_superior" : 20.7,
+        "riel_inferior_macho" : 6.4,
+        "riel_inferior_hembra" : 12,
+        "_doblado_superior_inferior" : 3,
+        "_doblado_ancho_tubo" : 3
+    },
+    "tino" :{
+        "perfil" : 16.6,
+        "_laterales" : 15.2,
+        "t_macho" : 10.7,
+        "t_hembra" : 13.4,
+        "t_ancha" : 16,
+        "_nave_corredera" : 15.2,
+        "_inf_nave_macho" : 9,
+        "_inf_nave_hembra" : 7.1,
+        "riel_superior" : 20.7,
+        "riel_inferior_macho" : 6.4,
+        "riel_inferior_hembra" : 12,
+        "_doblado_superior_inferior" : 3,
+        "_doblado_ancho_tubo" : 3
+    },
+    "jhul" :{
+        "perfil" : 16.6,
+        "_laterales" : 17.8,
+        "t_macho" : 10.7,
+        "t_hembra" : 15,
+        "t_ancha" : 16.7,
+        "_nave_corredera" : 14.6,
+        "_inf_nave_macho" : 9,
+        "_inf_nave_hembra" : 6.9,
+        "riel_superior" : 21.1,
+        "riel_inferior_macho" : 8.3,
+        "riel_inferior_hembra" : 10,
+        "_doblado_superior_inferior" : 3,
+        "_doblado_ancho_tubo" : 3
+    }
+}
