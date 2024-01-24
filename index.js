@@ -1,115 +1,51 @@
 const fs = require('fs')
 
 const configuraciones = require('./configuraciones/dobladoras.json')
-const { calcularMedidasVentana } = require('./componentes/ventana')
+const { calcularMedidasVentana } = require('./componentes/ventana');
+const { exit } = require('process');
 
-listadata = [{
-    alto: 152,
-    ancho: 78,
-    cantidadhuecos: 1
-},{
-    alto: 152,
-    ancho: 24,
-    cantidadhuecos: 1
-},{
-    alto: 152,
-    ancho: 283,
-    cantidadhuecos: 4
-},{
-    alto: 152,
-    ancho: 80,
-    cantidadhuecos: 2
-}]
+const maximaLongitud = 244;
+function partirPartesMaximaongitud(parte) {
 
-function guardarEnArchivo(filename, cadenatexto){
-    fs.writeFile(filename, cadenatexto,
+}
+
+var listaProductos = [
     {
-        encoding: "utf8",
-        flag: "w",
-        mode: 0o666
-    },
-    (err) => {
-        if (err)
-        console.log(err);
-        else {
-        console.log("File written successfully\n");
-        console.log("The written has the following contents:");
-        console.log(fs.readFileSync(filename, "utf8"));
+        nombre: "v1",
+        tipo: "ventana",
+        medidas: {
+            alto: 152,
+            ancho: 78,
+            cantidadhuecos: 1
         }
-    });
-}
-
-function cutterFormat(listadata, config) {
-    let texto = "name,quantity,width,height,canRotate\n"
-    listadata.forEach((data, index) => {
-  
-        // console.log("ancho: "+JSON.stringify(calcularMedidasVentana(data, config), null,2))
-        let resultado = calcularMedidasVentana(data, config)
-    
-        let items = resultado['items']
-        for(var attributename in items) {
-            let registro = items[attributename]
-            texto += (index + 1)+"_"+registro['nombre']+","
-            texto += registro['cantidad']+","
-            texto += registro['largo']+","
-            texto += registro['ancho']+","
-            texto += "true"
-            texto += "\n"
+    }, {
+        nombre: "v2",
+        tipo: "ventana",
+        medidas: {
+            alto: 152,
+            ancho: 24,
+            cantidadhuecos: 1
         }
-    
-    
-    });
-    return texto;
-}
-
-function cutlistoptimizerFormat(listadata, config) {
-    let texto = "Length,Width,Qty,Label,Enabled\n"
-    listadata.forEach((data, index) => {
-
-        let resultado = calcularMedidasVentana(data, config)
-    
-        let items = resultado['items']
-        for(var attributename in items) {
-            let registro = items[attributename]
-            texto += registro['largo']+","
-            texto += registro['ancho']+","
-            texto += registro['cantidad']+","
-            texto += (index + 1)+"_"+registro['nombre']+","
-            texto += "true"
-            texto += "\n"
+    }, {
+        nombre: "v3",
+        tipo: "ventana",
+        medidas: {
+            nombre: "v3",
+            alto: 152,
+            ancho: 283,
+            cantidadhuecos: 4
         }
-    });
-    return texto;
-}
-
-function optCutFormat(listadata, config) {
-    let texto = "";
-    let contador = 0;
-    listadata.forEach((data, index) => {
-  
-        // console.log("ancho: "+JSON.stringify(calcularMedidasVentana(data, config), null,2))
-        let resultado = calcularMedidasVentana(data, config)
-    
-        let items = resultado['items']
-        for(var attributename in items) {
-            contador++;
-            let registro = items[attributename]
-            texto += contador+"\n"
-            texto += (index + 1)+"_"+registro['nombre']+"\n"
-            texto += "30 PXG\n"
-            texto += registro['cantidad']+"\n"
-            texto += Math.round(registro['largo']*10)+"\n"
-            texto += Math.round(registro['ancho']*10)+"\n"
-            texto += "\n"
-            texto += "\n"
-            texto += "\n";
+    }, {
+        nombre: "v4",
+        tipo: "ventana",
+        medidas: {
+            alto: 152,
+            ancho: 80,
+            cantidadhuecos: 2
         }
-    
-    
-    });
-    texto = "21\n"+contador+"\n9\n\n\n0\n\n" + texto;
-    return texto;
-}
+    }
+]
+
 
 const listFormatos = [
     {
@@ -126,11 +62,108 @@ const listFormatos = [
     }
 ]
 
+const funcionesCalculoMedidas = {
+    ventana: calcularMedidasVentana,
+}
+
 const dobladora = 'jhul';
 const dir_salida = "salida";
+const productosCalculados = []
 
-listFormatos.forEach((itemFuncion)=>{
-    console.log(itemFuncion)
-    let result = itemFuncion.funcion(listadata, configuraciones[dobladora]);
-    guardarEnArchivo(dir_salida+"/"+itemFuncion.resultname, result);
+listaProductos.forEach((data, index) => {
+    const componenteCalculo = funcionesCalculoMedidas[data.tipo]
+    let resultado = componenteCalculo(data.medidas, configuraciones[dobladora])
+    let itemsCalculo = resultado['items']
+    productosCalculados.push({
+        ...data,
+        "calculo": itemsCalculo
+    })
+});
+
+//console.log(JSON.stringify(productosCalculados))
+
+function guardarEnArchivo(filename, cadenatexto) {
+    fs.writeFile(filename, cadenatexto,
+        {
+            encoding: "utf8",
+            flag: "w",
+            mode: 0o666
+        },
+        (err) => {
+            if (err)
+                console.log(err);
+            else {
+                console.log("File written successfully:", filename);
+                fs.readFileSync(filename, "utf8");
+            }
+        });
+}
+
+function cutterFormat(productosCalculados, config) {
+    let texto = "name,quantity,width,height,canRotate\n"
+    productosCalculados.forEach((data, index) => {
+
+        let items = data['calculo']
+        for (var attributename in items) {
+            let registro = items[attributename]
+            texto += (index + 1) + "_" + registro['nombre'] + ","
+            texto += registro['cantidad'] + ","
+            texto += registro['largo'] + ","
+            texto += registro['ancho'] + ","
+            texto += "true"
+            texto += "\n"
+        }
+
+
+    });
+    return texto;
+}
+
+function cutlistoptimizerFormat(productosCalculados, config) {
+    let texto = "Length,Width,Qty,Label,Enabled\n"
+    productosCalculados.forEach((data, index) => {
+
+        let items = data['calculo']
+        for (var attributename in items) {
+            let registro = items[attributename]
+            texto += registro['largo'] + ","
+            texto += registro['ancho'] + ","
+            texto += registro['cantidad'] + ","
+            texto += (index + 1) + "_" + registro['nombre'] + ","
+            texto += "true"
+            texto += "\n"
+        }
+    });
+    return texto;
+}
+
+function optCutFormat(productosCalculados, config) {
+    let texto = "";
+    let contador = 0;
+    productosCalculados.forEach((data, index) => {
+
+        let items = data['calculo']
+        console.log(JSON.stringify(items))
+        for (var attributename in items) {
+            contador++;
+            let registro = items[attributename]
+            texto += contador + "\n"
+            texto += (index + 1) + "_" + registro['nombre'] + "\n"
+            texto += "30 PXG\n"
+            texto += registro['cantidad'] + "\n"
+            texto += Math.round(registro['largo'] * 10) + "\n"
+            texto += Math.round(registro['ancho'] * 10) + "\n"
+            texto += "\n"
+            texto += "\n"
+            texto += "\n";
+        }
+    });
+    texto = "21\n" + contador + "\n9\n\n\n0\n\n" + texto;
+    return texto;
+}
+
+listFormatos.forEach((formatoFuncion) => {
+    console.log(formatoFuncion)
+    let result = formatoFuncion.funcion(productosCalculados, configuraciones[dobladora]);
+    guardarEnArchivo(dir_salida + "/" + formatoFuncion.resultname, result);
 })

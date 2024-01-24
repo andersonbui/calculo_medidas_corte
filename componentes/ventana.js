@@ -1,6 +1,6 @@
 let calcularMedidasVentana = function(data, config) {
     let respuesta = {}
-    respuesta = Object.assign({},respuesta,calcularRielSuperior(data, config))
+    respuesta = {...respuesta, ...calcularRielSuperior(data, config)}
     respuesta = Object.assign({},respuesta,calcularRielInferior(data, config))
     respuesta = Object.assign({},respuesta,calcularLaterales(data, config))
     let cantidadhuecos = data['cantidadhuecos']
@@ -67,9 +67,6 @@ let calcularLaterales = function(data, config) {
 }
 
 let horizontalesNave = function(data, config) {
-    ancho = data['ancho']
-    alto = data['alto']
-    id = data['id']
     let anchoNave = calcularAnchoNave(data, config)
     let _nave_corredera = config['_nave_corredera']
     let _inf_nave_macho = config['_inf_nave_macho']
@@ -97,16 +94,15 @@ let horizontalesNave = function(data, config) {
 }
 
 let calcularAnchoNave = function(data, config){
-    ancho = data['ancho']
-    cantidadhuecos = data['cantidadhuecos']
+    let ancho = data['ancho']
+    let cantidadhuecos = data['cantidadhuecos']
     let _doblado_ancho_tubo = config['_doblado_ancho_tubo']
     let anchoNave = ((ancho - _doblado_ancho_tubo) / cantidadhuecos) ;
     return anchoNave
 }
 
 let verticalesNave = function(data, config) {
-    ancho = data['ancho']
-    alto = data['alto']
+    let alto = data['alto']
     let _doblado_superior_inferior = config['_doblado_superior_inferior']
     let _laterales = config['_laterales']
     let altoNave = alto - 1 - 2*_doblado_superior_inferior;
@@ -123,8 +119,8 @@ let verticalesNave = function(data, config) {
 
 let calcularRielSuperior = function(data, config) {
     let riel_superior = config['riel_superior']
-    alto = riel_superior
-    ancho = data['ancho']
+    let alto = riel_superior
+    let ancho = data['ancho']
     return {
         rielSuperior: {
             largo: alto,
